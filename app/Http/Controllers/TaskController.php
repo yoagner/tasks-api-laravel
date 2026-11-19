@@ -13,6 +13,14 @@ class TaskController extends Controller
     public function index(Request $request): JsonResponse
     {
         $tasks = Task::query()
+            ->when(
+                $request->filled('status'),
+                fn ($query) => $query->where('status', $request->input('status'))
+            )
+            ->when(
+                $request->filled('assignee'),
+                fn ($query) => $query->where('assignee', 'like', '%' . $request->input('assignee') . '%')
+            )
             ->paginate(10);
 
         return response()->json($tasks);
