@@ -21,6 +21,7 @@ class TaskController extends Controller
                 $request->filled('assignee'),
                 fn ($query) => $query->where('assignee', 'like', '%' . $request->input('assignee') . '%')
             )
+            ->orderBy('due_date')
             ->paginate(10);
 
         return response()->json($tasks);
